@@ -1,7 +1,7 @@
 <script setup>
 
 defineProps( {
-    menuIsOpen: Boolean,
+    sideMenu: Boolean,
 });
 
 </script>
@@ -16,7 +16,9 @@ defineProps( {
         leave-from-class="transform opacity-100"
         leave-to-class="transform opacity-0 -translate-x-5"
     >
-        <aside v-if="menuIsOpen" :class="{ block: menuIsOpen, hidden: !menuIsOpen  }" class="bg-navs px-4 py-4 w-full md:w-auto md:absolute drop-shadow-md">
+        <aside v-if="sideMenu"
+               :class="{ block: sideMenu, hidden: !sideMenu  }"
+               class="bg-navs px-4 py-4 w-full md:w-auto md:absolute drop-shadow-md z-50">
             <section class="py-5 border-b border-zinc-900">
                 <ul>
                     <li>

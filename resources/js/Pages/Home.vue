@@ -7,7 +7,7 @@ import Main from "@/Components/body/Main.vue";
 defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
-    menuIsOpen: Boolean,
+    sideMenu: Boolean,
 });
 
 
@@ -23,7 +23,7 @@ defineProps({
             <Navbar
                 :canLogin="canLogin"
                 :canRegister="canRegister"
-                @update:menuIsOpen="menuIsOpen = $event">
+                @update:sideMenu="sideMenu = $event">
             </Navbar>
 
         </div>
@@ -31,7 +31,7 @@ defineProps({
         <div class="flex flex-row min-h-screen bg-navs flex-wrap">
 
             <SideMenu
-                :menuIsOpen ="menuIsOpen">
+                :sideMenu ="sideMenu">
             </SideMenu>
 
             <Main>
