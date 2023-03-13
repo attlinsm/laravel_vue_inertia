@@ -8,6 +8,14 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
+//Clean data-page
+const cleanApp = () => {
+    document.getElementById('app').removeAttribute('data-page')
+}
+
+//Event for clear
+document.addEventListener('inertia:finish', cleanApp)
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -20,4 +28,4 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
-});
+}).then(cleanApp); //Cleaning

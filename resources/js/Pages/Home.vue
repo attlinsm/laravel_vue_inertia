@@ -16,6 +16,7 @@ defineProps({
 <template>
 
     <Head title="TaskManager" />
+
     <div class="min-h-screen">
 
         <div class="flex flex-col justify-between bg-navs">
@@ -41,7 +42,6 @@ defineProps({
         </div>
 
     </div>
-
 
 </template>
 

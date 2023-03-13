@@ -1,5 +1,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from "vue";
+import {usePage} from "@inertiajs/vue3";
+
 
 defineProps({
     canLogin: Boolean,
@@ -8,6 +10,7 @@ defineProps({
 
 const open = ref(false);
 const sideMenu = ref(false);
+const user = usePage().props.auth.user;
 
 onMounted(() => document.addEventListener('keydown', closeOnEscape));
 onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
@@ -15,6 +18,9 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
         open.value = false;
+    }
+    if (sideMenu.value && e.key === 'Escape') {
+        sideMenu.value = false;
     }
 };
 
@@ -26,16 +32,18 @@ const closeOnEscape = (e) => {
 
         <div class="flex flex-row justify-between py-1 px-1 mx-auto md:container items-center">
 
-            <button @click="$emit('update:sideMenu', !sideMenu); sideMenu = !sideMenu;" id="button" class="inline-flex items-center justify-center p-2 text-gray-400 hover:text-white">
+            <div>
+                <button v-if="user" @click="$emit('update:sideMenu', !sideMenu); sideMenu = !sideMenu;" id="button" class="inline-flex items-center justify-center p-2 text-gray-400 hover:text-white">
 
-                <span class="sr-only">Открыть главное меню</span>
+                    <span class="sr-only">Открыть главное меню</span>
 
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                    <path v-if="!sideMenu" stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    <path v-if="sideMenu" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path v-if="!sideMenu" stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        <path v-if="sideMenu" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
 
-            </button>
+                </button>
+            </div>
 
             <div class="inline-flex">
 
@@ -66,7 +74,7 @@ const closeOnEscape = (e) => {
     </nav>
 
     <div v-show="open" class="fixed inset-0 z-40" @click="open = false"></div>
-
+    <div v-show="sideMenu" class="fixed inset-0 z-40" @click="$emit('update:sideMenu', sideMenu = false)"></div>
     <transition
         appear
         enter-active-class="transition duration-400"
@@ -80,9 +88,22 @@ const closeOnEscape = (e) => {
              :class="{ block: open, hidden: !open  }"
              class="px-4 py-4 bg-navs md:absolute right-0 top-[70px] drop-shadow-md z-50"
              id="menu">
-            <a href="#" class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Главная</a>
-            <a v-if="canRegister" :href="route('register')" class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Регистрация</a>
-            <a v-if="canLogin" :href="route('login')" class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Авторизация</a>
+            <div v-if="!user">
+                <a v-if="canRegister"
+                   :href="route('register')"
+                   class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Регистрация</a>
+                <a v-if="canLogin"
+                   :href="route('login')"
+                   class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Авторизация</a>
+            </div>
+            <div v-if="user">
+                <a :href="route('home')"
+                   class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75">Главная</a>
+                <a :href="route('profile.edit')"
+                   class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75"> Профиль </a>
+                <a :href="route('logout')"
+                   class="mt-1 px-5 py-2 block text-white text-center hover:bg-gray-700 rounded duration-75"> Выход </a>
+            </div>
         </div>
     </transition>
 </template>
